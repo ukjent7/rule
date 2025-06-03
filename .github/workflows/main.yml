@@ -1,0 +1,25 @@
+name: Update GFWList for AdGuardHome
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # 每天凌晨 3 点 UTC（北京时间 11 点）
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: sudo apt-get install -y curl
+    - name: Convert GFWList
+      run: |
+        curl -sL https://raw.githubusercontent.com/kpivy8/gfwlist2AdGuardHome/master/gfwlist2adguardhome.sh -o gfw2adh.sh
+        bash gfw2adh.sh -s https://dns.google/dns-query > gfwlist_upstreams.txt
+    - name: Commit & Push
+      run: |
+        git config --global user.email "action@github.com"
+        git config --global user.name "GitHub Action"
+        git add gfwlist_upstreams.txt
+        git commit -m "Update GFWList `date +'%Y-%m-%d'`" || echo "No changes"
+        git push
