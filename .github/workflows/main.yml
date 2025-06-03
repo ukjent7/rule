@@ -1,32 +1,46 @@
 name: Update GFWList for AdGuardHome
-
 on:
   schedule:
-    - cron: '0 3 * * *'  # 每天 UTC 3 点（北京时间 11 点）
+    - cron: '0 3 * * *'  # 修复 cron 表达式：每天 UTC 3 点
   workflow_dispatch:      # 允许手动触发
 
 jobs:
   update:
     runs-on: ubuntu-latest
-
+    # 方案1：添加写入权限（推荐）
+    permissions:
+      contents: write
+      
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4  # 使用最新版本
+        with:
+          token: ${{ secrets.GH_TOKEN }}  # 使用你的自定义 token
+          
       - name: Install curl
         run: sudo apt-get update && sudo apt-get install -y curl
-
+        
       - name: Convert GFWList to AdGuardHome rules
         run: |
           curl -sL https://raw.githubusercontent.com/kpivy8/gfwlist2AdGuardHome/master/gfwlist2adguardhome.sh -o gfw2adh.sh
           bash gfw2adh.sh -s https://dns.google/dns-query > gfwlist_upstreams.txt
-
-      - name: Commit & Push updated rules
-        env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          
+      - name: Check for changes
+        id: verify-changed-files
         run: |
-          git config --global user.name "GitHub Action"
-          git config --global user.email "action@github.com"
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+          
+      - name: Commit & Push updated rules
+        if: steps.verify-changed-files.outputs.changed == 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git add gfwlist_upstreams.txt
-          git commit -m "Update GFWList $(date +'%Y-%m-%d')" || echo "No changes"
-          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:main
+          git commit -m "Update GFWList $(date +'%Y-%m-%d %H:%M:%S UTC')"
+          git push
