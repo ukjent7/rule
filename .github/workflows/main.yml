@@ -22,8 +22,10 @@ jobs:
         
       - name: Convert GFWList to AdGuardHome rules
         run: |
-          curl -sL https://raw.githubusercontent.com/kpivy8/gfwlist2AdGuardHome/master/gfwlist2adguardhome.sh -o gfw2adh.sh
-          bash gfw2adh.sh -s https://dns.google/dns-query > gfwlist_upstreams.txt
+         curl -sL https://raw.githubusercontent.com/kpivy8/gfwlist2AdGuardHome/master/gfwlist2adguardhome.sh -o gfw2adh.sh
+         bash gfw2adh.sh -s https://dns.google/dns-query
+         mv adguardhome_gfwlist.txt gfwlist_upstreams.txt
+
           
       - name: Check for changes
         id: verify-changed-files
