@@ -1,0 +1,2 @@
+type: domain_lists      file: /tmp/tmp.VwV259zhuy
+type: adguardhome_server    file: adguardhome_gfwlist.txt
