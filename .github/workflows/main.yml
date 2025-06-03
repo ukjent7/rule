@@ -2,24 +2,30 @@ name: Update GFWList for AdGuardHome
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 每天凌晨 3 点 UTC（北京时间 11 点）
+    - cron: '0 3 * * *' # 每天 UTC 时间 3 点（北京时间 11 点）
   workflow_dispatch:
 
 jobs:
-  build:
+  update:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
     - name: Install dependencies
-      run: sudo apt-get install -y curl
-    - name: Convert GFWList
+      run: sudo apt-get update && sudo apt-get install -y curl
+
+    - name: Convert GFWList to AdGuardHome rules
       run: |
         curl -sL https://raw.githubusercontent.com/kpivy8/gfwlist2AdGuardHome/master/gfwlist2adguardhome.sh -o gfw2adh.sh
         bash gfw2adh.sh -s https://dns.google/dns-query > gfwlist_upstreams.txt
-    - name: Commit & Push
+
+    - name: Commit & Push updated rules
+      env:
+        GH_TOKEN: ${{ secrets.GH_TOKEN }}  # 你需要在 Secrets 里设置这个
       run: |
-        git config --global user.email "action@github.com"
         git config --global user.name "GitHub Action"
+        git config --global user.email "action@github.com"
         git add gfwlist_upstreams.txt
-        git commit -m "Update GFWList `date +'%Y-%m-%d'`" || echo "No changes"
-        git push
+        git commit -m "Update GFWList $(date +'%Y-%m-%d')" || echo "No changes"
+        git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
