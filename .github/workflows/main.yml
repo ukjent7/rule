@@ -2,8 +2,8 @@ name: Update GFWList for AdGuardHome
 
 on:
   schedule:
-    - cron: '0 3 * * *' # 每天 UTC 3 点（北京时间 11 点）
-  workflow_dispatch:
+    - cron: '0 3 * * *'  # 每天 UTC 3 点（北京时间 11 点）
+  workflow_dispatch:      # 允许手动触发
 
 jobs:
   update:
@@ -29,4 +29,4 @@ jobs:
           git config --global user.email "action@github.com"
           git add gfwlist_upstreams.txt
           git commit -m "Update GFWList $(date +'%Y-%m-%d')" || echo "No changes"
-          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
+          git push https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }} HEAD:main
