@@ -26,8 +26,8 @@ jobs:
         run: |
           echo "Converting to AdGuardHome format..."
           mkdir -p output
-          # 将每行域名转换为 [/domain/]1.1.1.1 格式
-          awk '{if($0 !~ /^#/ && $0 != "") print "[/" $0 "/]1.1.1.1"}' gfw.txt > output/gfw-adguard.txt
+          # 将每行域名转换为 [/domain/]https 格式
+          awk '{if($0 !~ /^#/ && $0 != "") print "[/" $0 "/]https://wikimedia-dns.org/dns-query"}' gfw.txt > output/gfw-adguard.txt
           echo "Converted file size: $(wc -l < output/gfw-adguard.txt) lines"
           
       - name: Commit and Push
