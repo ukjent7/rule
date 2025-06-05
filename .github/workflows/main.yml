@@ -23,9 +23,13 @@ jobs:
           awk '{print "[/" $0 "/]1.1.1.1"}' gfw.txt > output/gfw-adguard.txt
 
       - name: Commit and Push
+        env:
+          TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          git config --global user.name "github-actions[bot]"
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
           git add output/gfw-adguard.txt
-          git commit -m "Update gfw-adguard.txt from latest gfw.txt"
+          git commit -m "Update gfw-adguard.txt from latest gfw.txt" || echo "No changes to commit"
           git push
+
