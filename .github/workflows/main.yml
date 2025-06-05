@@ -1,48 +1,31 @@
-name: Update GFWList for AdGuardHome
+name: Convert GFW to AdGuardHome Rules
+
 on:
   schedule:
-    - cron: '0 3 * * *'  # 修复 cron 表达式：每天 UTC 3 点
-  workflow_dispatch:      # 允许手动触发
+    - cron: '0 2 * * *' # 每天UTC时间2点运行（可根据需要修改）
+  workflow_dispatch:
 
 jobs:
-  update:
+  build:
     runs-on: ubuntu-latest
-    # 方案1：添加写入权限（推荐）
-    permissions:
-      contents: write
-      
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4  # 使用最新版本
-        with:
-          token: ${{ secrets.GH_TOKEN }}  # 使用你的自定义 token
-          
-      - name: Install curl
-        run: sudo apt-get update && sudo apt-get install -y curl
-        
-      - name: Convert GFWList to AdGuardHome rules
-        run: |
-         curl -sL https://raw.githubusercontent.com/kpivy8/gfwlist2AdGuardHome/master/gfwlist2adguardhome.sh -o gfw2adh.sh
-         bash gfw2adh.sh -s https://dns.google/dns-query
-         mv adguardhome_gfwlist.txt gfwlist_upstreams.txt
 
-          
-      - name: Check for changes
-        id: verify-changed-files
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Download gfw.txt
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
-          else
-            echo "changed=false" >> $GITHUB_OUTPUT
-          fi
-          
-      - name: Commit & Push updated rules
-        if: steps.verify-changed-files.outputs.changed == 'true'
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          curl -L -o gfw.txt https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/gfw.txt
+
+      - name: Convert to AdGuardHome format
         run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git add gfwlist_upstreams.txt
-          git commit -m "Update GFWList $(date +'%Y-%m-%d %H:%M:%S UTC')"
+          mkdir -p output
+          awk '{print "[/" $0 "/]1.1.1.1"}' gfw.txt > output/gfw-adguard.txt
+
+      - name: Commit and Push
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+          git add output/gfw-adguard.txt
+          git commit -m "Update gfw-adguard.txt from latest gfw.txt"
           git push
