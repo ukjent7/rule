@@ -971,6 +971,7 @@
 [/cdjp.org/]https://dns.google/dns-query
 [/cdn-images.mailchimp.com/]https://dns.google/dns-query
 [/cdn-telegram.org/]https://dns.google/dns-query
+[/cdn.arstechnica.net/]https://dns.google/dns-query
 [/cdn.assets.lfpcontent.com/]https://dns.google/dns-query
 [/cdn.helixstudios.net/]https://dns.google/dns-query
 [/cdn.jwplayer.com/]https://dns.google/dns-query
@@ -1131,6 +1132,7 @@
 [/churchinhongkong.org/]https://dns.google/dns-query
 [/chushigangdrug.ch/]https://dns.google/dns-query
 [/ci-en.jp/]https://dns.google/dns-query
+[/cici.com/]https://dns.google/dns-query
 [/ciciai.com/]https://dns.google/dns-query
 [/cienen.com/]https://dns.google/dns-query
 [/cineastentreff.de/]https://dns.google/dns-query
