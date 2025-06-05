@@ -1,3 +1,5 @@
+quic://dns.alidns.com
+tls://dot.pub
 [/000webhost.com/]https://wikimedia-dns.org/dns-query
 [/030buy.com/]https://wikimedia-dns.org/dns-query
 [/0rz.tw/]https://wikimedia-dns.org/dns-query
