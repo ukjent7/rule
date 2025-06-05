@@ -1,36 +1,46 @@
 name: Convert GFW to AdGuardHome Rules
-
 on:
   schedule:
-    - cron: '0 2 * * *' # 每天UTC时间2点运行（可根据需要修改）
+    - cron: '0 2 * * *' # 每天UTC时间2点运行
   workflow_dispatch:
+
+permissions:
+  contents: write  # 添加写入权限
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
-
+        uses: actions/checkout@v4  # 更新到最新版本
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}  # 使用内置token
+          
       - name: Download gfw.txt
         run: |
+          echo "Downloading gfw.txt..."
           curl -L -o gfw.txt https://raw.githubusercontent.com/Loyalsoldier/v2ray-rules-dat/release/gfw.txt
-
+          echo "Downloaded file size: $(wc -l < gfw.txt) lines"
+          
       - name: Convert to AdGuardHome format
         run: |
+          echo "Converting to AdGuardHome format..."
           mkdir -p output
-          awk '{print "[/" $0 "/]1.1.1.1"}' gfw.txt > output/gfw-adguard.txt
-
+          # 将每行域名转换为 [/domain/]1.1.1.1 格式
+          awk '{if($0 !~ /^#/ && $0 != "") print "[/" $0 "/]1.1.1.1"}' gfw.txt > output/gfw-adguard.txt
+          echo "Converted file size: $(wc -l < output/gfw-adguard.txt) lines"
+          
       - name: Commit and Push
-        env:
-          TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
-          git add output/gfw-adguard.txt
-          git commit -m "Update gfw-adguard.txt from latest gfw.txt" || echo "No changes to commit"
-          git push origin HEAD:main
-
-
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # 检查是否有更改
+          if [ -n "$(git status --porcelain)" ]; then
+            git add output/gfw-adguard.txt
+            git commit -m "Update gfw-adguard.txt from latest gfw.txt ($(date -u '+%Y-%m-%d %H:%M:%S UTC'))"
+            git push
+            echo "Changes committed and pushed successfully"
+          else
+            echo "No changes to commit"
+          fi
