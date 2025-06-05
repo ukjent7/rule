@@ -31,5 +31,6 @@ jobs:
           git remote set-url origin https://x-access-token:${TOKEN}@github.com/${{ github.repository }}
           git add output/gfw-adguard.txt
           git commit -m "Update gfw-adguard.txt from latest gfw.txt" || echo "No changes to commit"
-          git push
+          git push origin HEAD:main
+
 
