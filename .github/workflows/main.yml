@@ -29,7 +29,8 @@ jobs:
             {
            echo "quic://dns.alidns.com"
             echo "tls://dot.pub"
-             awk '{if($0 !~ /^#/ && $0 != "") print "[/" $0 "/]https://wikimedia-dns.org/dns-query"}' gfw.txt
+             echo "[/dpdns.org/]sdns://AQMAAAAAAAAAEjk0LjE0MC4xNC4xNDA6NTQ0MyC16ETWuDo-PhJo62gfvqcN48X6aNvWiBQdvy7AZrLa-iUyLmRuc2NyeXB0LnVuZmlsdGVyZWQubnMxLmFkZ3VhcmQuY29t"
+             awk '{if($0 !~ /^#/ && $0 != "") print "[/" $0 "/]sdns://AQMAAAAAAAAAEjk0LjE0MC4xNC4xNDA6NTQ0MyC16ETWuDo-PhJo62gfvqcN48X6aNvWiBQdvy7AZrLa-iUyLmRuc2NyeXB0LnVuZmlsdGVyZWQubnMxLmFkZ3VhcmQuY29t"}' gfw.txt
             } > output/gfw-adguard.txt
                echo "Converted file size: $(wc -l < output/gfw-adguard.txt) lines"
 
