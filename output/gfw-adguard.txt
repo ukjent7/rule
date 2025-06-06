@@ -1212,6 +1212,7 @@ tls://dot.pub
 [/codeshare.io/]https://wikimedia-dns.org/dns-query
 [/codeskulptor.org/]https://wikimedia-dns.org/dns-query
 [/cofacts.tw/]https://wikimedia-dns.org/dns-query
+[/coffeemanga.to/]https://wikimedia-dns.org/dns-query
 [/coin2co.in/]https://wikimedia-dns.org/dns-query
 [/coinbase.com/]https://wikimedia-dns.org/dns-query
 [/coinbene.com/]https://wikimedia-dns.org/dns-query
