@@ -28,7 +28,6 @@ jobs:
            mkdir -p output
             {
            echo "211.136.192.6"
-           echo "202.96.128.86"
            echo "quic://dns.alidns.com"
             echo "tls://dot.pub"
              echo "[/dpdns.org/]sdns://AQMAAAAAAAAAEjk0LjE0MC4xNC4xNDA6NTQ0MyC16ETWuDo-PhJo62gfvqcN48X6aNvWiBQdvy7AZrLa-iUyLmRuc2NyeXB0LnVuZmlsdGVyZWQubnMxLmFkZ3VhcmQuY29t"
