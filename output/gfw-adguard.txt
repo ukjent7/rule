@@ -1,5 +1,4 @@
 211.136.192.6
-202.96.128.86
 quic://dns.alidns.com
 tls://dot.pub
 [/dpdns.org/]sdns://AQMAAAAAAAAAEjk0LjE0MC4xNC4xNDA6NTQ0MyC16ETWuDo-PhJo62gfvqcN48X6aNvWiBQdvy7AZrLa-iUyLmRuc2NyeXB0LnVuZmlsdGVyZWQubnMxLmFkZ3VhcmQuY29t
